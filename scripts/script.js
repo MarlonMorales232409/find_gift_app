@@ -5,13 +5,16 @@ const mainContent = document.getElementById("main");
 const loader = `<div class="lds-roller loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`
 
 
+
+
+
 // Function Submit
 const formSubmit = (event) => {
     event.preventDefault();
     const input = document.querySelector(".query_input");
 
     // API Call
-    getGift(input.value)
+    getGif(input.value)
 
 }
 
@@ -27,7 +30,7 @@ const createEvents = () => {
     copyButton.forEach(button => {
         button.addEventListener("click", () => {
             // Get the URL from img wrapper element
-            const imgUrl = document.querySelector('.gift_img_wrapper').getAttribute("data_url");
+            const imgUrl = document.querySelector('.gif_img_wrapper').getAttribute("data_url");
 
             // Using clipboard API to copy the img url
             navigator.clipboard.writeText(imgUrl)
@@ -37,7 +40,7 @@ const createEvents = () => {
     })
 }
 
-// Build Gift HTML
+// Build Gif HTML
 const buildHTML = (data) => {
 
     let itemsHtml = ""
@@ -45,9 +48,9 @@ const buildHTML = (data) => {
     // Create a dinamyc UI itering over the "data" array get it from parameters
     data.forEach(element => {
         itemsHtml += ` 
-        <article class="gift_card">
-            <div class="gift_img_wrapper" data_url="${element.url}">
-                <img src="${element.images.original.url}" alt="gift" class="gift_img" ">
+        <article class="gif_card">
+            <div class="gif_img_wrapper" data_url="${element.url}">
+                <img src="${element.images.original.url}" alt="gif" class="gif_img" ">
             </div>
             <div class="title_wrapper">
                 <p class="title">${element.title}</p>
@@ -79,16 +82,16 @@ const buildHTML = (data) => {
 
 
 // Call API Function
-const getGift = async (query) => {
+const getGif = async (query = "red pandas") => {
     // Show a Loader when the App is making a request
     mainContent.innerHTML = loader;
 
     const url = `https://api.giphy.com/v1/gifs/search?api_key=s78EhL8E0LubTAuzIRLXkoD6rpFDAaob&q=${query}&limit=10`
     // Async Await
     const res = await fetch(url);
-    const gift = await res.json();
+    const gif = await res.json();
     // Function to build a dynamic UI 
-    buildHTML(gift.data)
+    buildHTML(gif.data)
 
     // Remove the Loader, if it's in the dom 
     if (document.querySelector('.loader')) {
@@ -97,5 +100,9 @@ const getGift = async (query) => {
     }
 
 }
+
+// Make the first API call when the app is initializing
+
+window.onload = getGif();
 
 
