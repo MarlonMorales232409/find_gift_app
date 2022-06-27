@@ -8,14 +8,14 @@ const loader = `<div class="lds-roller loader"><div></div><div></div><div></div>
 
 
 
-// Function Submit
+// Form submit event
 const formSubmit = (event) => {
+
     event.preventDefault();
     const input = document.querySelector(".query_input");
 
     // API Call
     getGif(input.value)
-
 }
 
 // Submit Listener
@@ -23,29 +23,49 @@ form.addEventListener('submit', formSubmit);
 
 
 
-// Create Events Listener for copy link Dynamic buttons
+
+/**
+ * Create Events Listener for copy link Dynamic buttons
+ * @returns {void}
+ */
 const createEvents = () => {
     const copyButton = document.querySelectorAll(".copy_link");
 
     copyButton.forEach(button => {
+
         button.addEventListener("click", () => {
             // Get the URL from img wrapper element
             const imgUrl = document.querySelector('.gif_img_wrapper').getAttribute("data_url");
 
             // Using clipboard API to copy the img url
             navigator.clipboard.writeText(imgUrl)
-                .then((copi) => alert('URL has been copied to the clipboard'))
-                .catch((error) => alert('We could not copy to the clipboard'))
+                .then(() => Swal.fire({
+                    title: 'Great!',
+                    text: 'The URL has been copied to the clipboard',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                }))
+                .catch(() => Swal.fire({
+                    title: 'Great!',
+                    text: 'The URL could not be copied to the clipboard',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                }))
         })
     })
 }
 
-// Build Gif HTML
+
+/**
+ * // Create a dinamyc UI itering over the "data" array get it from parameters
+ * @param {string[]} data Array with all gifs information
+ * @returns {void}
+ */
+
 const buildHTML = (data) => {
 
     let itemsHtml = ""
 
-    // Create a dinamyc UI itering over the "data" array get it from parameters
     data.forEach(element => {
         itemsHtml += ` 
         <article class="gif_card">
@@ -81,28 +101,39 @@ const buildHTML = (data) => {
 
 
 
-// Call API Function
+/**
+ * API Call
+ * @param {string} query user query to find the new gifs, by default "red pandas"
+ * @returns {void}
+ */
 const getGif = async (query = "red pandas") => {
+    const url = `https://api.giphy.com/v1/gifs/search?api_key=s78EhL8E0LubTAuzIRLXkoD6rpFDAaob&limit=10&q=${query}`;
+
     // Show a Loader when the App is making a request
     mainContent.innerHTML = loader;
 
-    const url = `https://api.giphy.com/v1/gifs/search?api_key=s78EhL8E0LubTAuzIRLXkoD6rpFDAaob&q=${query}&limit=10`
     // Async Await
-    const res = await fetch(url);
-    const gif = await res.json();
-    // Function to build a dynamic UI 
-    buildHTML(gif.data)
-
+    try {
+        const res = await fetch(url);
+        const gifs = await res.json();
+        // Function to build a dynamic UI 
+        buildHTML(gifs.data)
+    } catch (error) {
+        Swal.fire({
+            title: 'Error',
+            text: 'Please, Check your Internet conection',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+        })
+    }
     // Remove the Loader, if it's in the dom 
     if (document.querySelector('.loader')) {
         document.querySelector('.loader').remove()
 
     }
-
 }
 
 // Make the first API call when the app is initializing
-
 window.onload = getGif();
 
 
