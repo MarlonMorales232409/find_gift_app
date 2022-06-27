@@ -17,6 +17,8 @@ const formSubmit = (event) => {
     if (input.value) {
         // API Call
         getGif(input.value)
+
+        form.reset()
     }
 
     return
