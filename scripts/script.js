@@ -14,8 +14,12 @@ const formSubmit = (event) => {
     event.preventDefault();
     const input = document.querySelector(".query_input");
 
-    // API Call
-    getGif(input.value)
+    if (input.value) {
+        // API Call
+        getGif(input.value)
+    }
+
+    return
 }
 
 // Submit Listener
