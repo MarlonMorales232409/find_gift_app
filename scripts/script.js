@@ -1,4 +1,4 @@
-// Elements
+// Variables
 const form = document.querySelector(".form");
 const mainContent = document.getElementById("main");
 // Loader Spinner
