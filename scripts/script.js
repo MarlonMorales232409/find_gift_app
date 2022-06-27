@@ -105,7 +105,7 @@ const buildHTML = (data) => {
 
 /**
  * Check if the data array is empty
- * @param {string[]} data 
+ * @param {string[]} gifs gifs array from api response
  * @returns {void}
  */
 const checkApiResults = (gifs) => {
