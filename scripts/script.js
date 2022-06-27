@@ -103,6 +103,24 @@ const buildHTML = (data) => {
     createEvents()
 }
 
+/**
+ * Check if the data array is empty
+ * @param {string[]} data 
+ * @returns {void}
+ */
+const checkApiResults = (gifs) => {
+    console.log(gifs.data)
+    if (gifs.data.length < 1) {
+        Swal.fire({
+            title: 'No Results',
+            text: 'try looking for something else like "kitties"',
+            icon: 'info',
+            confirmButtonText: 'Ok'
+        })
+
+        getGif("red pandas")
+    }
+}
 
 
 /**
@@ -120,6 +138,7 @@ const getGif = async (query = "red pandas") => {
     try {
         const res = await fetch(url);
         const gifs = await res.json();
+        checkApiResults(gifs)
         // Function to build a dynamic UI 
         buildHTML(gifs.data)
     } catch (error) {
